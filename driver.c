@@ -7,7 +7,7 @@
 
 
 
-#define lcd_Ram                  ((void*)0xD40000)
+#define lcd_Ram                  ((void*)0x00D40000)
 #define LCD_WIDTH               (320)
 #define LCD_HEIGHT              (240)
 #define LCD_SIZE                (LCD_WIDTH*LCD_HEIGHT*2)
@@ -42,11 +42,11 @@ void lcd_set_backlight(uint8_t light){
 
 }
 uint32_t getPixelColor(int x, int y, int width) {
-    uint32_t *pixelAddr = (uint32_t *)(FRAMEBUFFER_BASE_ADDR + (y * width + x) * sizeof(uint32_t));
+    uint32_t *pixelAddr = (uint32_t *)(lcd_Ram + (y * width + x) * sizeof(uint32_t));
 
     uint32_t color = *pixelAddr;
 
     return color;   
-}s
+}
 char snum[5];  
 
