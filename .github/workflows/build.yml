@@ -1,0 +1,28 @@
+name: Build and test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test portable framebuffer code
+        run: sh tests/run.sh
+      - name: Download CE toolchain v15.0
+        run: |
+          curl -fLsS --retry 3 \
+            https://github.com/CE-Programming/toolchain/releases/download/v15.0/CEdev-Linux.tar.gz \
+            -o "$RUNNER_TEMP/CEdev-Linux.tar.gz"
+          echo '85f4794a617b134249a9cba8a084414e86e16d2a68377b1d72ace30c636dbdf9  '"$RUNNER_TEMP/CEdev-Linux.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/CEdev-Linux.tar.gz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/CEdev/bin" >> "$GITHUB_PATH"
+      - name: Build calculator program
+        run: make
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TIFBDEMO-8xp
+          path: bin/TIFBDEMO.8xp
+          if-no-files-found: error

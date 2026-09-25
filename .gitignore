@@ -1,0 +1,5 @@
+bin/
+obj/
+render-preview
+*.ppm
+.DS_Store
